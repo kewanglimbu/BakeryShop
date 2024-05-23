@@ -1,0 +1,97 @@
+﻿@model CategoryListViewModel
+
+<h2>Categories</h2>
+<hr />
+@using (Html.BeginForm("Delete", "Category", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+}
+<p>
+    <a class="btn btn-primary" asp-action="Add">Add new category</a>
+</p>
+
+<hr />
+
+@if (!Model.Categories.Any())
+{
+    <tr><td colspan="3" class="text-center">No categories found</td></tr>
+}
+else
+{
+    <table class="table table-condensed table-bordered">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Date Added</th>
+            <th>Actions</th>
+        </tr>
+        @foreach (var category in Model.Categories)
+        {
+
+            <tr>
+                <td>@category.Id</td>
+                <td>@category.Name</td>
+                <td>@category.DateAdded.Value.ToShortDateString()</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@category.Id">Details</a>
+                    <a asp-action="Edit" asp-route-id="@category.Id">Edit</a>
+                    <a href="#" class="delete-category" data-id="@category.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </table>
+
+    <div id="notification" style="display: none;"></div>
+
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.delete-category').on('click', function (e) {
+                e.preventDefault();
+                var categoryId = $(this).data('id');
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'You will not be able to recover this category!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Get the CSRF token from the hidden input field
+                        var token = $('input[name="__RequestVerificationToken"]').val();
+                        $.ajax({
+                            url: '/Category/Delete',
+                            type: 'DELETE',
+                            data: { CategoryId: categoryId, __RequestVerificationToken: token },
+                            success: function (data) {
+                                Swal.fire({
+                                    title: 'Deleted!',
+                                    position: "top-end",
+                                    text: data.Message,
+                                    icon: 'success',
+                                    toast: true,
+                                    showConfirmButton: false,
+                                    timerProgressBar: true,
+                                    timer: 800
+                                }).then((result) => {
+                                    location.reload();
+                                });
+                            },
+                            error: function () {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'An error occurred while deleting the category.',
+                                    icon: 'error'
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}

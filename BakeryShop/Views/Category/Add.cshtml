@@ -1,0 +1,68 @@
+﻿@model CategoryAddViewModel
+
+<h2>Add a new category</h2>
+<hr />
+
+<form method="post" id="add-category" asp-controller="Category" asp-action="Add">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label"></label>
+        <textarea asp-for="Description" class="form-control" rows="4" cols="50" style="resize: none;"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <input type="submit" value="Save" class="btn btn-primary" />
+</form>
+<div>
+    <a asp-controller="Category" asp-action="Index">Go Back</a>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#add-category').submit(function (e) {
+                e.preventDefault();
+                var formData = $(this).serialize();
+                $.ajax({
+                    url: '/Category/Add',
+                    type: 'POST',
+                    data: formData,
+                    success: function (data) {
+                        if (data.success === true) {
+                            Swal.fire({
+                                title: 'Added Successfully!',
+                                position: "top-end",
+                                icon: 'success',
+                                toast: true,
+                                showConfirmButton: false,
+                                timerProgressBar: true,
+                                timer: 800
+                            }).then((result) => {
+                                window.location.href = data.redirectUrl;
+                            });
+                        }
+                        else {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong',
+                                icon: 'error'
+                            });
+                        }
+                    },
+                    error: function () {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: "A category with same name cann't exist",
+                            icon: 'error'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}
