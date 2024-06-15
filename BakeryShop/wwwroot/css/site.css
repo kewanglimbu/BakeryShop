@@ -20,3 +20,9 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/*BakeryItem checkbox*/
+input#BakeryItem_IsAvailable {
+    width: 20px;
+    height: 20px;
+}

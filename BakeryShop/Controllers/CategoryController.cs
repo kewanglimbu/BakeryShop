@@ -1,5 +1,5 @@
 ﻿using BakeryShop.Models;
-using BakeryShop.Repository.Interfaces;
+using BakeryShop.Repositories.Interfaces;
 using BakeryShop.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 

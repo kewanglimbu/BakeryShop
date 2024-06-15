@@ -1,9 +1,9 @@
 ﻿using BakeryShop.Data;
 using BakeryShop.Models;
-using BakeryShop.Repository.Interfaces;
+using BakeryShop.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace BakeryShop.Repository.Implementations
+namespace BakeryShop.Repositories.Implementations
 {
     public class CategoryRepository : ICategoryRepository
     {

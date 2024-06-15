@@ -1,0 +1,105 @@
+﻿@model BakeryItemListViewModel
+
+<h2>Bakery Products</h2>
+<hr />
+
+<p>
+    <a class="btn btn-primary" asp-action="Add">Add new Bakery</a>
+</p>
+<hr />
+@if (!Model.BakeryItems.Any())
+{
+    <tr><td colspan="3" class="text-center">No bakery product at this point</td></tr>
+}
+else
+{
+    <table class="table table-condensed table-bordered">
+        <tr>
+            <th>
+                Id
+            </th>
+            <th>
+                Image
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                Price
+            </th>
+            <th>Actions</th>
+        </tr>
+        @foreach (var bakery in Model.BakeryItems)
+        {
+
+            <tr>
+                <td>@bakery.Id</td>
+                <td>
+                    @if (string.IsNullOrEmpty(bakery.ImageUrl))
+                    {
+                        <span style="color:Red"> please put an image</span>
+                    }
+                    else
+                    {
+                        <img src="@bakery.ImageUrl" alt="Bakery Image" style="max-width: 100px; max-height: 100px;" />
+                    }
+                </td>
+                <td>@bakery.Name</td>
+                <td>@bakery.Price</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@bakery.Id">Details</a>
+                    <a asp-action="Edit" asp-route-id="@bakery.Id">Edit</a>
+                    <a href="#" class="delete-bakeryItem" data-id="@bakery.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </table>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.delete-bakeryItem').on('click', function (e) {
+                e.preventDefault();
+                var bakeryItemId = $(this).data('id');
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'You will not be able to recover this bakery Product!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '/BakeryItem/Delete?bakeryItemId=' + bakeryItemId,
+                            type: 'DELETE',
+                            success: function (data) {
+                                Swal.fire({
+                                    title: 'Deleted!',
+                                    position: "top-end",
+                                    text: data.Message,
+                                    icon: 'success',
+                                    toast: true,
+                                    showConfirmButton: false,
+                                    timerProgressBar: true,
+                                    timer: 800
+                                }).then((result) => {
+                                    location.reload();
+                                });
+                            },
+                            error: function () {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'An error occurred while deleting the bakery Product.',
+                                    icon: 'error'
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}

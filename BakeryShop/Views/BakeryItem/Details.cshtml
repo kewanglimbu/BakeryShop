@@ -1,0 +1,65 @@
+﻿@model BakeryItemDetailsViewModel
+
+<h2>Bakery Product Details </h2>
+<hr />
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">
+            <label asp-for="Id"></label>
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Id
+        </dd>
+        <dt class="col-sm-2">
+            <label asp-for="Name"></label>
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Name
+        </dd>
+        <dt class="col-sm-2">
+            <label asp-for="ImageUrl">Image</label>
+           
+        </dt>
+        <dd class="col-sm-10">
+            @if (string.IsNullOrEmpty(Model.ImageUrl))
+            {
+                <span style="color:Red"> please put an image</span>
+            }
+            else
+            {
+                <img src="@Model.ImageUrl" alt="Bakery Image" style="max-width: 100px; max-height: 100px;" />
+            }
+        </dd>
+        <dt class="col-sm-2">
+            <label asp-for="Description"></label>
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Description
+        </dd>
+        <dt class="col-sm-2">
+            <label asp-for="Price"></label>
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Price
+        </dd>
+        <dt class="col-sm-2">
+            <label asp-for="IsAvailable"></label>
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model.IsAvailable == true)
+            {
+                <td>Available</td>
+            }
+            else
+            {
+                <td>Not Available</td>
+            }
+        </dd>
+        <dt class="col-sm-2">
+            <label asp-for="Category"></label>
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Category.Name
+        </dd>
+</div>

@@ -1,0 +1,106 @@
+﻿@model BakeryItemEditViewModel
+
+<h2>Edit a Bakery Product</h2>
+<hr />
+
+<form method="post" id="edit-bakeryItem" asp-controller="BakeryItem" asp-action="Edit">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div id="validation-summary" class="text-danger" style="display:none;"></div>
+    <input type="hidden" asp-for="BakeryItem.Id" />
+
+    <div class="mb-3">
+        <label asp-for="BakeryItem.Name" class="form-label"></label>
+        <input asp-for="BakeryItem.Name" class="form-control" />
+        <span asp-validation-for="BakeryItem.Name" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="BakeryItem.Description" class="form-label"></label>
+        <textarea asp-for="BakeryItem.Description" class="form-control" rows="5" cols="50" style="resize: none;"></textarea>
+        <span asp-validation-for="BakeryItem.Description" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Categories" class="form-label">Select Category</label>
+        <select asp-for="BakeryItem.CategoryId" asp-items="Model.Categories">
+            <option value="">-- Select Category --</option>
+        </select>
+        <span asp-validation-for="Categories" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="BakeryItem.Price" class="form-label"></label>
+        <textarea asp-for="BakeryItem.Price" class="form-control" rows="5" cols="50" style="resize: none;"></textarea>
+        <span asp-validation-for="BakeryItem.Price" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="BakeryItem.ImageUrl" class="form-label"></label>
+        <textarea asp-for="BakeryItem.ImageUrl" class="form-control" rows="1" cols="50" style="resize: none;"></textarea>
+        <span asp-validation-for="BakeryItem.ImageUrl" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="BakeryItem.IsAvailable" class="form-label"></label>
+        <input asp-for="BakeryItem.IsAvailable" type="checkbox" />
+        <span asp-validation-for="BakeryItem.IsAvailable" class="text-danger"></span>
+    </div>
+    <input type="submit" value="Save" class="btn btn-primary" />
+</form>
+<div>
+    <a asp-controller="Category" asp-action="Index">Go Back</a>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#edit-bakeryItem').submit(function (e) {
+                e.preventDefault();
+                var formData = $(this).serialize();
+                $.ajax({
+                    url: '/BakeryItem/Edit',
+                    type: 'POST',
+                    data: formData,
+                    success: function (data) {
+                        if (data.success === true) {
+                            Swal.fire({
+                                title: 'Update Successfully!',
+                                position: "top-end",
+                                icon: 'success',
+                                toast: true,
+                                showConfirmButton: false,
+                                timerProgressBar: true,
+                                timer: 800
+                            }).then((result) => {
+                                window.location.href = data.redirectUrl;
+                            });
+                        }
+                        else {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'An error occurred while updating the bakery product ',
+                                icon: 'error'
+                            });
+                        }
+                    },
+                    error: function (xhr) {
+
+                        // Parse the JSON response
+                        var response;
+
+                        try {
+                            response = JSON.parse(xhr.responseText);
+                        }
+                        catch (e) {
+                            console.error("Error parsing JSON response: ", e);
+                            response = { message: "An error occurred while updating the bakery product." };
+                        }
+                        // Extract the message from the response
+                        var errorMessage = response.message;
+
+                        Swal.fire({
+                            title: 'Error!',
+                            text: errorMessage,
+                            icon: 'error'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}

@@ -1,6 +1,6 @@
 ﻿using BakeryShop.Models;
 
-namespace BakeryShop.Repository.Interfaces
+namespace BakeryShop.Repositories.Interfaces
 {
     public interface ICategoryRepository
     {

@@ -1,6 +1,6 @@
 using BakeryShop.Data;
-using BakeryShop.Repository.Implementations;
-using BakeryShop.Repository.Interfaces;
+using BakeryShop.Repositories.Interfaces;
+using BakeryShop.Repositories.Implementations;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<BakeryShopDbContext>(Options => Options.UseSqlServer(builder.Configuration.GetConnectionString("BakeryShopConnection")));
 builder.Services.AddScoped<ICategoryRepository,CategoryRepository>();
+builder.Services.AddScoped<IBakeryItemRepository, BakeryItemRepository>();
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 var app = builder.Build();
 
